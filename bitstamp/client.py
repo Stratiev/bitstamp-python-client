@@ -125,6 +125,18 @@ class Public(BaseClient):
         url = self._construct_url("ticker_hour/", base, quote)
         return self._get(url, return_json=True, version=2)
 
+    def tickers(self):
+        """
+        Returns list of allowed tickers.
+        """
+        url = self._construct_url("ticker/", base=None, quote=None)
+        response = self._get(url, return_json=True, version=2)
+        pairs = [x['pair'] for x in response]
+        tickers = []
+        for p in pairs:
+            tickers += p.split("/")
+        return set(tickers)
+
     def order_book(self, group=True, base="btc", quote="usd"):
         """
         Returns dictionary with "bids" and "asks".
